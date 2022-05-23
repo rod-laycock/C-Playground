@@ -1,66 +1,60 @@
-// 99bottlesofbeer.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-// My first program
-
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-// So fun C++ thing with organizing functions
-
-// Now you can more conscicely document your code
-
-//
-string howManyBottles(int beerCount);
-
-//
-string howManyBottlesLeft(int beerCount);
-// ^ This tells the compiler the function exists
-
+/**
+ * Append " bottles" or " bottle" depending on the number input
+ * If `bottleCount` === 0 then return " no more bottles"
+ * @returns A string in this format: `<bottleCount> bottle(s)`
+ */
+string makeBottleStr(int bottleCount);
 
 int main()
 {
-	int beerint;
-// Integer initalised, will be the backbone of the program
-	beerint = 100;
-	string BeerMany = " of beer on the wall ";
-	string OfBeer = " of beer. take one down pass it around ";
-	string OnTheWall = " of beer on the wall\n";
-	string NoBeer = "Congrats you drank all the beer. now you're drunk.";
-// Various strings that will be wrote dependant on how many beers are left
+	// The base string where the numbers will be placed (@s will be replaced by the appropriate number + bottle word)
+	string baseString = "@s of beer on the wall, @s of beer! Take one down pass it around... @s of beer on the wall!";
 
-	for (int i = beerint; i > 0; i--)
+	// Initial amount of beers on the wall
+	int beerCount = 99;
+
+	for (int i = beerCount; i > 0; i--)
 	{
-		cout << i << howManyBottles(i) << BeerMany << i << OfBeer << howManyBottlesLeft(i) << howManyBottles(i) << OnTheWall;		
+		// Copy the baseString to a new string so we don't lose the @s positions
+		string newString = baseString;
+
+		// Replace the @s with the appropriate number and bottle word
+		newString.replace(newString.find("@s"), 2, makeBottleStr(i));
+		// newString is now "<i> of beer on the wall, @s of beer! Take one down pass it around... @s of beer on the wall!"
+
+		newString.replace(newString.find("@s"), 2, makeBottleStr(i));
+		// newString is now "<i> of beer on the wall, <i> of beer! Take one down pass it around... @s of beer on the wall!"
+
+		newString.replace(newString.find("@s"), 2, makeBottleStr(i - 1));
+		// newString is now "<i> of beer on the wall, <i> of beer! Take one down pass it around... <i - 1> of beer on the wall!"
+
+		cout << newString << '\n';
+
 		if (i == 1)
 		{
-			cout << NoBeer;
+			cout << "Congrats you drank all the beer. Now you're drunk.\n";
 		}
 	}
-};
-// This loop will be the basis for printing everything
-
-string howManyBottles(int beerCount) {
-	string bottle = " bottle";
-	
-	if (beerCount >= 1) {
-		bottle = bottle + "s";
-	}
-
-	return bottle;
 }
-// This will check how many bottles are left and will amend an "s" for pluarlity 
-string howManyBottlesLeft(int beercount) 
+
+string makeBottleStr(int bottleCount)
 {
-	if (beercount - 1 == 0 )
+	if (bottleCount == 0)
 	{
-		return "no";
+		// There are no bottles => "no more bottles"
+		return "no more bottles";
 	}
-	return to_string(beercount - 1);
+
+	string append = " bottles";
+	if (bottleCount == 1)
+	{
+		// There is only one bottle => "1 bottle"
+		append = " bottle";
+	}
+	return to_string(bottleCount) + append;
 }
-// This will check the number of beers left 
-// 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
